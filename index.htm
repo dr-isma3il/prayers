@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1a0033">
     <meta name="description" content="Расписание намазов на Рамадан 2026 в Саратове">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Рамадан 2026">
     <title>Рамадан 2026 - Саратов</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="icon" id="favicon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%238b5cf6'/%3E%3Cstop offset='100%25' style='stop-color:%2314b8a6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23g)'/%3E%3Cpath d='M65 30A20 20 0 1 1 45 10 15 15 0 0 0 65 30z' fill='%23fbbf24'/%3E%3Cpath d='M75 25l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z' fill='%2314b8a6'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg-primary: #0a0015;
@@ -58,9 +61,23 @@
         }
 
         .container {
-            max-width: 480px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 900px;
+            }
+            .main-content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .countdown-section {
+                grid-column: 1 / -1;
+            }
         }
 
         header {
@@ -228,41 +245,90 @@
             letter-spacing: 1px;
         }
 
+        .lang-theme-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-switch, .theme-switch {
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-btn, .theme-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active, .theme-btn.active {
+            background: var(--accent-purple);
+            color: white;
+        }
+
         .progress-section {
             background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
         }
 
-        .progress-ring {
+        .progress-bar-container {
             position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 16px;
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
         }
 
-        .progress-ring svg {
-            transform: rotate(-90deg);
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8 0%, #fb923c 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
         }
 
-        .progress-ring-circle {
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        .progress-text {
+        .progress-bar-fill::after {
+            content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .progress-percentage {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, #38bdf8 0%, #fb923c 100%);
             -webkit-background-clip: text;
@@ -270,16 +336,9 @@
             background-clip: text;
         }
 
-        .progress-label {
-            font-size: 0.75rem;
+        .progress-text {
+            font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
-        .progress-info {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
         }
 
         .progress-days {
@@ -287,20 +346,86 @@
             color: var(--accent-gold);
         }
 
+        body.light-theme {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+        }
+
+        body.light-theme::before {
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(20, 184, 166, 0.08) 0%, transparent 50%);
+        }
+
+        .notifications-permission {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 16px 0;
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notifications-permission.show {
+            display: flex;
+        }
+
+        .notif-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .notif-btn {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
         .tips-section {
             background: var(--bg-card);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 24px;
-            margin: 20px 0;
+            padding: 20px;
+            margin: 16px 0;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .tips-header {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .tips-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .collapse-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .tips-section.collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .tips-section.collapsed .tip-content,
+        .tips-section.collapsed .dhikr-box {
+            display: none;
         }
 
         .tips-icon {
@@ -645,11 +770,40 @@
                     <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.7-6.3 4.7 2.3-7-6-4.6h7.6z"></path>
                 </svg>
             </div>
-            <h1>Рамадан 2026</h1>
-            <p class="subtitle">Саратов</p>
+            <h1 id="mainTitle">Рамадан 2026</h1>
+            <p class="subtitle" id="cityName">Саратов</p>
         </header>
 
+        <div class="lang-theme-bar">
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="ru" id="langRu">RU</button>
+                <button class="lang-btn" data-lang="ar" id="langAr">AR</button>
+            </div>
+            <div class="theme-switch">
+                <button class="theme-btn active" data-theme="dark" id="themeDark">🌙</button>
+                <button class="theme-btn" data-theme="light" id="themeLight">☀️</button>
+            </div>
+        </div>
+
+        <div class="notifications-permission" id="notifPrompt">
+            <span class="notif-text" id="notifText">Разрешить уведомления за 30 мин до Фаджра?</span>
+            <button class="notif-btn" id="enableNotif">Разрешить</button>
+        </div>
+
         <div class="progress-section">
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-info-row">
+                <div>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                    <span class="progress-text" id="progressInfo"> - اليوم 1 من 29</span>
+                </div>
+                <div class="progress-days" id="daysRemaining">متبقي 28 يومًا</div>
+            </div>
+        </div>
+
+        <div class="main-content">
             <div class="progress-ring">
                 <svg width="140" height="140">
                     <circle cx="70" cy="70" r="60" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8" fill="none"></circle>
@@ -708,11 +862,15 @@
                 <span class="fasting-time" id="fastingDuration">--:--</span>
             </div>
         </div>
+        </div>
 
         <div class="tips-section">
-            <div class="tips-header">
-                <span class="tips-icon">💡</span>
-                <h3 class="tips-title">نصيحة اليوم</h3>
+            <div class="tips-header" id="tipsToggle">
+                <div class="tips-header-left">
+                    <span class="tips-icon">💡</span>
+                    <h3 class="tips-title" id="tipsSectionTitle">نصيحة اليوم</h3>
+                </div>
+                <span class="collapse-icon">▼</span>
             </div>
             <div class="tip-content">
                 <p class="tip-text" id="dailyTip">جاري التحميل...</p>
@@ -722,11 +880,6 @@
                 <div class="dhikr-translation" id="dhikrTranslation">Свят Аллах и хвала Ему</div>
             </div>
         </div>
-
-        <button class="share-btn" id="shareBtn">
-            <span>📤</span>
-            <span>Поделиться расписанием</span>
-        </button>
 
         <button class="month-view-btn" id="toggleMonth">📅 Показать весь месяц</button>
 
@@ -779,14 +932,68 @@
             { day: 29, date: '19.03', fajr: '05:22', sunrise: '07:01', dhuhr: '13:15', asr: '17:09', maghrib: '19:07', isha: '21:00' }
         ];
 
-        const prayerNames = {
-            fajr: 'Фаджр (Рассвет)',
-            sunrise: 'Восход',
-            dhuhr: 'Зухр (Полдень)',
-            asr: 'Аср (После полудня)',
-            maghrib: 'Магриб (Закат)',
-            isha: 'Иша (Ночь)'
+        const translations = {
+            ru: {
+                title: 'Рамадан 2026',
+                city: 'Саратов',
+                nextPrayer: 'До следующего намаза',
+                units: 'часы : минуты : секунды',
+                day: 'День',
+                prevDay: 'Предыдущий день',
+                nextDay: 'Следующий день',
+                imsak: '⏰ وقت الإمساك',
+                fastingDuration: 'مدة الصيام:',
+                tipsTitle: 'نصيحة اليوم',
+                showMonth: '📅 Показать весь месяц',
+                hideMonth: '🔼 Скрыть месяц',
+                completed: 'مكتمل',
+                remaining: 'متبقي',
+                lastDay: 'آخر يوم من رمضان',
+                ramadanFinished: 'Рамадан завершён',
+                notifText: 'Разрешить уведомления за 30 мин до Фаджра?',
+                notifButton: 'Разрешить',
+                prayers: {
+                    fajr: 'Фаджр (Рассвет)',
+                    sunrise: 'Восход',
+                    dhuhr: 'Зухр (Полдень)',
+                    asr: 'Аср (После полудня)',
+                    maghrib: 'Магриб (Закат)',
+                    isha: 'Иша (Ночь)'
+                }
+            },
+            ar: {
+                title: 'رمضان 2026',
+                city: 'ساراتوف',
+                nextPrayer: 'حتى الصلاة القادمة',
+                units: 'ساعات : دقائق : ثواني',
+                day: 'يوم',
+                prevDay: 'اليوم السابق',
+                nextDay: 'اليوم التالي',
+                imsak: '⏰ وقت الإمساك',
+                fastingDuration: 'مدة الصيام:',
+                tipsTitle: 'نصيحة اليوم',
+                showMonth: '📅 عرض الشهر كاملاً',
+                hideMonth: '🔼 إخفاء الشهر',
+                completed: 'مكتمل',
+                remaining: 'متبقي',
+                lastDay: 'آخر يوم من رمضان',
+                ramadanFinished: 'انتهى رمضان',
+                notifText: 'السماح بالإشعارات قبل 30 دقيقة من الفجر؟',
+                notifButton: 'السماح',
+                prayers: {
+                    fajr: 'الفجر',
+                    sunrise: 'الشروق',
+                    dhuhr: 'الظهر',
+                    asr: 'العصر',
+                    maghrib: 'المغرب',
+                    isha: 'العشاء'
+                }
+            }
         };
+
+        let currentLang = localStorage.getItem('ramadan-lang') || 'ru';
+        let currentTheme = localStorage.getItem('ramadan-theme') || 'dark';
+        const prayerNames = translations[currentLang].prayers;
 
         const dailyTips = [
             'اليوم الأول: استقبل رمضان بنية صادقة وقلب مخلص. رمضان كريم!',
@@ -834,6 +1041,121 @@
         let currentDayIndex = 0;
         let countdownInterval;
         let deferredPrompt;
+        let notificationPermission = false;
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('ramadan-lang', lang);
+            const t = translations[lang];
+            
+            document.getElementById('mainTitle').textContent = t.title;
+            document.getElementById('cityName').textContent = t.city;
+            document.querySelector('.next-prayer-label').textContent = t.nextPrayer;
+            document.querySelector('.countdown-units').textContent = t.units;
+            document.getElementById('tipsSectionTitle').textContent = t.tipsTitle;
+            document.getElementById('notifText').textContent = t.notifText;
+            document.getElementById('enableNotif').textContent = t.notifButton;
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            displayDay(currentDayIndex);
+        }
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('ramadan-theme', theme);
+            document.body.className = theme === 'light' ? 'light-theme' : '';
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+        }
+
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) return;
+            
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                notificationPermission = true;
+                localStorage.setItem('ramadan-notif', 'granted');
+                document.getElementById('notifPrompt').classList.remove('show');
+                scheduleNextNotification();
+            }
+        }
+
+        function scheduleNextNotification() {
+            if (!notificationPermission) return;
+            
+            const now = new Date();
+            const dayData = ramadanData[currentDayIndex];
+            const [day, month] = dayData.date.split('.');
+            const monthIndex = month === '02' ? 1 : 2;
+            const [fajrH, fajrM] = dayData.fajr.split(':').map(Number);
+            
+            const fajrTime = new Date(2026, monthIndex, parseInt(day), fajrH, fajrM);
+            const notifTime = new Date(fajrTime.getTime() - 30 * 60 * 1000);
+            
+            if (notifTime > now) {
+                const delay = notifTime - now;
+                setTimeout(() => {
+                    new Notification('🌙 Рамадан - Саратов', {
+                        body: `Фаджр через 30 минут (${dayData.fajr})`,
+                        icon: document.getElementById('favicon').href,
+                        tag: 'fajr-reminder'
+                    });
+                }, delay);
+            }
+        }
+
+        function initPWA() {
+            const manifestData = {
+                name: 'Рамадан 2026 - Саратов',
+                short_name: 'Рамадан',
+                description: 'Расписание намазов на Рамадан 2026 в Саратове',
+                start_url: window.location.pathname,
+                display: 'standalone',
+                background_color: '#0a0015',
+                theme_color: '#1a0033',
+                orientation: 'portrait',
+                icons: [
+                    {
+                        src: document.getElementById('favicon').href,
+                        sizes: '512x512',
+                        type: 'image/svg+xml'
+                    }
+                ]
+            };
+            
+            const blob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+            const manifestURL = URL.createObjectURL(blob);
+            const link = document.querySelector('link[rel="manifest"]') || document.createElement('link');
+            link.rel = 'manifest';
+            link.href = manifestURL;
+            if (!document.querySelector('link[rel="manifest"]')) {
+                document.head.appendChild(link);
+            }
+            
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE = 'ramadan-v1';
+                    self.addEventListener('install', e => {
+                        e.waitUntil(caches.open(CACHE).then(cache => 
+                            cache.addAll(['/', '/index.html'])
+                        ));
+                    });
+                    self.addEventListener('fetch', e => {
+                        e.respondWith(
+                            caches.match(e.request).then(r => r || fetch(e.request))
+                        );
+                    });
+                `;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                const swURL = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swURL).catch(() => {});
+            }
+        }
 
         function getCurrentRamadanDay() {
             const now = new Date();
@@ -857,8 +1179,9 @@
         function displayDay(index) {
             currentDayIndex = index;
             const dayData = ramadanData[index];
+            const t = translations[currentLang];
             
-            document.getElementById('currentDayNum').textContent = `День ${dayData.day}`;
+            document.getElementById('currentDayNum').textContent = `${t.day} ${dayData.day}`;
             document.getElementById('currentDate').textContent = formatDate(dayData.date);
             
             const todayTimesEl = document.getElementById('todayTimes');
@@ -874,7 +1197,7 @@
                 
                 prayerEl.className = `prayer-time ${highlightClass}`;
                 prayerEl.innerHTML = `
-                    <div class="prayer-name">${prayerNames[prayer]}</div>
+                    <div class="prayer-name">${translations[currentLang].prayers[prayer]}</div>
                     <div class="prayer-value">${dayData[prayer]}</div>
                 `;
                 todayTimesEl.appendChild(prayerEl);
@@ -933,9 +1256,10 @@
 
         function updateCountdown() {
             const nextPrayer = getNextPrayer();
+            const t = translations[currentLang];
             
             if (!nextPrayer) {
-                document.getElementById('nextPrayerName').textContent = 'Рамадан завершён';
+                document.getElementById('nextPrayerName').textContent = t.ramadanFinished;
                 document.getElementById('countdownTimer').textContent = '--:--:--';
                 return;
             }
@@ -1000,9 +1324,20 @@
         document.getElementById('toggleMonth').addEventListener('click', () => {
             const calendarEl = document.getElementById('calendarGrid');
             const btn = document.getElementById('toggleMonth');
+            const t = translations[currentLang];
             calendarEl.classList.toggle('active');
-            btn.textContent = calendarEl.classList.contains('active') ? '🔼 Скрыть месяц' : '📅 Показать весь месяц';
+            btn.textContent = calendarEl.classList.contains('active') ? t.hideMonth : t.showMonth;
         });
+
+        document.getElementById('tipsToggle').addEventListener('click', () => {
+            document.querySelector('.tips-section').classList.toggle('collapsed');
+        });
+
+        document.getElementById('langRu').addEventListener('click', () => applyLanguage('ru'));
+        document.getElementById('langAr').addEventListener('click', () => applyLanguage('ar'));
+        document.getElementById('themeDark').addEventListener('click', () => applyTheme('dark'));
+        document.getElementById('themeLight').addEventListener('click', () => applyTheme('light'));
+        document.getElementById('enableNotif').addEventListener('click', requestNotificationPermission);
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -1070,44 +1405,29 @@
 
         function updateProgress(day) {
             const percentage = Math.round((day / 29) * 100);
-            const circumference = 2 * Math.PI * 60;
-            const offset = circumference - (percentage / 100) * circumference;
+            const t = translations[currentLang];
             
-            document.getElementById('progressCircle').style.strokeDashoffset = offset;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
             document.getElementById('progressPercentage').textContent = `${percentage}%`;
-            document.getElementById('progressInfo').textContent = `اليوم ${day} من 29`;
+            document.getElementById('progressInfo').textContent = ` - اليوم ${day} من 29`;
             
             const remaining = 29 - day;
             document.getElementById('daysRemaining').textContent = 
-                remaining === 0 ? 'آخر يوم من رمضان' : `متبقي ${remaining} يومًا`;
+                remaining === 0 ? t.lastDay : `${t.remaining} ${remaining} يومًا`;
         }
 
-        document.getElementById('shareBtn').addEventListener('click', async () => {
-            const dayData = ramadanData[currentDayIndex];
-            const shareText = `🌙 Расписание намазов на ${dayData.day} день Рамадана (${formatDate(dayData.date)})\n\n` +
-                `Фаджр: ${dayData.fajr}\n` +
-                `Магриб: ${dayData.maghrib}\n\n` +
-                `Саратов | Рамадан 2026`;
-            
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'Рамадан 2026 - Саратов',
-                        text: shareText
-                    });
-                } catch (err) {
-                    console.log('Share cancelled');
-                }
-            } else {
-                navigator.clipboard.writeText(shareText);
-                const btn = document.getElementById('shareBtn');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<span>✓</span><span>Скопировано!</span>';
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                }, 2000);
-            }
-        });
+        applyLanguage(currentLang);
+        applyTheme(currentTheme);
+        initPWA();
+
+        if (localStorage.getItem('ramadan-notif') !== 'granted' && 'Notification' in window) {
+            setTimeout(() => {
+                document.getElementById('notifPrompt').classList.add('show');
+            }, 3000);
+        } else if (localStorage.getItem('ramadan-notif') === 'granted') {
+            notificationPermission = true;
+            scheduleNextNotification();
+        }
 
         const initialDay = getCurrentRamadanDay();
         displayDay(initialDay);
@@ -1136,3 +1456,4 @@
     </script>
 </body>
 </html>
+
