@@ -196,8 +196,8 @@
             </div>
             
             <div class="info-row">
-                <span id="imsakLabel">وقت الإمساك</span>
-                <span class="info-value" id="imsakTime" style="color:#38bdf8;">--:--</span>
+                <span id="fastingLabel">مدة الصيام</span>
+                <span class="info-value" id="fastingTime" style="color:#38bdf8;">--:--</span>
             </div>
 
             <div class="today-times" id="todayTimes"></div>
@@ -246,12 +246,12 @@
         const dict = {
             ru: {
                 title: 'Рамадан 2026', city: 'Саратов', next: 'До следующего намаза', 
-                day: 'День', hijri: 'По Хиджре', imsak: 'Имсак', left: 'Осталось', install: 'Установить приложение',
+                day: 'День', hijri: 'По Хиджре', fastDuration: 'Время поста', left: 'Осталось', install: 'Установить приложение', hrs: 'ч', mins: 'мин',
                 p: { fajr: 'Фаджр', dhuhr: 'Зухр', asr: 'Аср', maghrib: 'Магриб', isha: 'Иша' }
             },
             ar: {
                 title: 'رمضان 2026', city: 'ساراتوف', next: 'حتى الصلاة القادمة',
-                day: 'يوم', hijri: 'التاريخ الهجري', imsak: 'وقت الإمساك', left: 'متبقي', install: 'تثبيت التطبيق',
+                day: 'يوم', hijri: 'التاريخ الهجري', fastDuration: 'مدة الصيام', left: 'متبقي', install: 'تثبيت التطبيق', hrs: 'س', mins: 'د',
                 p: { fajr: 'الفجر', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء' }
             }
         };
@@ -272,7 +272,7 @@
             document.getElementById('cityName').textContent = dict[l].city;
             document.getElementById('nextPrayerLabel').textContent = dict[l].next;
             document.getElementById('hijriLabel').textContent = dict[l].hijri;
-            document.getElementById('imsakLabel').textContent = dict[l].imsak;
+            document.getElementById('fastingLabel').textContent = dict[l].fastDuration;
             document.getElementById('installText').textContent = dict[l].install;
             
             renderDay(currentIdx);
@@ -281,7 +281,7 @@
         function setTheme(t) {
             theme = t; localStorage.setItem('ramadan-theme', t);
             document.body.className = t === 'light' ? 'light-theme' : '';
-            document.getElementById('themeMetaColor') && (document.getElementById('themeMetaColor').content = t==='light' ? '#f8fafc' : '#0a0015');
+            document.getElementById('themeColorMeta') && (document.getElementById('themeColorMeta').content = t==='light' ? '#f8fafc' : '#0a0015');
             document.getElementById('themeDark').classList.toggle('active', t === 'dark');
             document.getElementById('themeLight').classList.toggle('active', t === 'light');
         }
@@ -305,10 +305,13 @@
             document.getElementById('currentDate').textContent = d.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'ar-EG', { day: 'numeric', month: 'long' });
             document.getElementById('hijriDate').textContent = `${day.day} رمضان 1447`;
             
-            // Calc Imsak
-            let [h, m] = day.fajr.split(':').map(Number);
-            m -= 10; if (m < 0) { m += 60; h -= 1; }
-            document.getElementById('imsakTime').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+            // Calculate Fasting Duration (Maghrib - Fajr)
+            const [fH, fM] = day.fajr.split(':').map(Number);
+            const [mH, mM] = day.maghrib.split(':').map(Number);
+            let totalMins = (mH * 60 + mM) - (fH * 60 + fM);
+            const hours = Math.floor(totalMins / 60);
+            const mins = totalMins % 60;
+            document.getElementById('fastingTime').textContent = `${hours} ${dict[lang].hrs} ${mins} ${dict[lang].mins}`;
 
             // Render Prayers
             const timesEl = document.getElementById('todayTimes');
@@ -390,17 +393,16 @@
         setTheme(theme);
         renderDay(getRealCurrentDay());
 
-        // --- PWA REGISTRATION (Fix for GitHub Pages) ---
+        // PWA REGISTRATION
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Must use relative path './' for GitHub pages to resolve repository subfolder properly
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('SW registered!', reg.scope))
+                    .then(reg => console.log('SW registered!'))
                     .catch(err => console.log('SW fail:', err));
             });
         }
 
-        // PWA Install Prompt Logic
+        // Install Prompt
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -419,7 +421,6 @@
             }
         });
         
-        // Hide install button if already running in standalone (installed)
         if (window.matchMedia('(display-mode: standalone)').matches) {
             document.getElementById('installPrompt').style.display = 'none';
         }
