@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ramadan-saratov-2026-v2';
+const CACHE_NAME = 'ramadan-saratov-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -8,10 +8,10 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -26,12 +26,13 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-        return cachedResponse || fetch(event.request);
-    }).catch(() => {
-        // Fallback to index if offline and request fails
+      // Return cached response if found, else fetch from network
+      return cachedResponse || fetch(event.request).catch(() => {
+        // If network fails (offline) and it's a page navigation, return index.html
         if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
+          return caches.match('./index.html');
         }
+      });
     })
   );
 });
