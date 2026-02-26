@@ -20,6 +20,8 @@
             --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --fajr-glow: rgba(56, 189, 248, 0.4);
+            --maghrib-glow: rgba(251, 146, 60, 0.4);
         }
 
         * {
@@ -180,9 +182,42 @@
             transform: translateY(-2px);
         }
 
-        .prayer-time.highlight {
-            background: var(--gradient-2);
-            box-shadow: 0 4px 16px rgba(245, 87, 108, 0.4);
+        .prayer-time.fajr-highlight {
+            background: rgba(56, 189, 248, 0.15);
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 20px var(--fajr-glow), 0 4px 16px rgba(56, 189, 248, 0.3);
+            animation: pulse-fajr 2s ease-in-out infinite;
+        }
+
+        .prayer-time.maghrib-highlight {
+            background: rgba(251, 146, 60, 0.15);
+            border: 2px solid #fb923c;
+            box-shadow: 0 0 20px var(--maghrib-glow), 0 4px 16px rgba(251, 146, 60, 0.3);
+            animation: pulse-maghrib 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-fajr {
+            0%, 100% { box-shadow: 0 0 20px var(--fajr-glow), 0 4px 16px rgba(56, 189, 248, 0.3); }
+            50% { box-shadow: 0 0 30px var(--fajr-glow), 0 6px 24px rgba(56, 189, 248, 0.5); }
+        }
+
+        @keyframes pulse-maghrib {
+            0%, 100% { box-shadow: 0 0 20px var(--maghrib-glow), 0 4px 16px rgba(251, 146, 60, 0.3); }
+            50% { box-shadow: 0 0 30px var(--maghrib-glow), 0 6px 24px rgba(251, 146, 60, 0.5); }
+        }
+
+        .prayer-time.fajr-highlight .prayer-name,
+        .prayer-time.maghrib-highlight .prayer-name {
+            color: white;
+            font-weight: 600;
+        }
+
+        .prayer-time.fajr-highlight .prayer-value {
+            color: #38bdf8;
+        }
+
+        .prayer-time.maghrib-highlight .prayer-value {
+            color: #fb923c;
         }
 
         .prayer-name {
@@ -193,9 +228,216 @@
             letter-spacing: 1px;
         }
 
-        .prayer-time.highlight .prayer-name {
-            color: white;
+        .progress-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 16px;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8 0%, #fb923c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .progress-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .progress-days {
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+        }
+
+        .tips-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tips-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tips-icon {
+            font-size: 1.8rem;
+        }
+
+        .tips-title {
+            font-size: 1.2rem;
             font-weight: 600;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tip-content {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-teal);
+            margin-bottom: 12px;
+        }
+
+        .tip-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .dhikr-box {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .dhikr-arabic {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+            direction: rtl;
+        }
+
+        .dhikr-translation {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .fasting-duration {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(20, 184, 166, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(20, 184, 166, 0.3);
+            margin: 16px 0;
+        }
+
+        .fasting-icon {
+            font-size: 1.5rem;
+        }
+
+        .fasting-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .fasting-time {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+        }
+
+        .share-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .hijri-date {
+            text-align: center;
+            padding: 12px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            margin: 16px 0;
+        }
+
+        .hijri-text {
+            font-size: 1rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .imsak-time {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(56, 189, 248, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            margin-bottom: 16px;
+        }
+
+        .imsak-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .imsak-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #38bdf8;
         }
 
         .prayer-value {
@@ -407,6 +649,29 @@
             <p class="subtitle">Саратов</p>
         </header>
 
+        <div class="progress-section">
+            <div class="progress-ring">
+                <svg width="140" height="140">
+                    <circle cx="70" cy="70" r="60" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8" fill="none"></circle>
+                    <circle id="progressCircle" class="progress-ring-circle" cx="70" cy="70" r="60" 
+                        stroke="url(#progressGradient)" stroke-width="8" fill="none" 
+                        stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"></circle>
+                    <defs>
+                        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#fb923c;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="progress-text">
+                    <div class="progress-percentage" id="progressPercentage">0%</div>
+                    <div class="progress-label">مكتمل</div>
+                </div>
+            </div>
+            <div class="progress-info" id="progressInfo">اليوم 1 من 29</div>
+            <div class="progress-days" id="daysRemaining">متبقي 28 يومًا</div>
+        </div>
+
         <div class="countdown-section">
             <div class="countdown-content">
                 <div class="next-prayer-label">До следующего намаза</div>
@@ -426,8 +691,42 @@
                 <button class="nav-btn" id="nextDay" aria-label="Следующий день">›</button>
             </div>
 
+            <div class="hijri-date">
+                <div class="hijri-text" id="hijriDate">1 رمضان 1447</div>
+            </div>
+
+            <div class="imsak-time">
+                <span class="imsak-label">⏰ وقت الإمساك</span>
+                <span class="imsak-value" id="imsakTime">--:--</span>
+            </div>
+
             <div class="today-times" id="todayTimes"></div>
+
+            <div class="fasting-duration">
+                <span class="fasting-icon">⏱️</span>
+                <span class="fasting-text">مدة الصيام:</span>
+                <span class="fasting-time" id="fastingDuration">--:--</span>
+            </div>
         </div>
+
+        <div class="tips-section">
+            <div class="tips-header">
+                <span class="tips-icon">💡</span>
+                <h3 class="tips-title">نصيحة اليوم</h3>
+            </div>
+            <div class="tip-content">
+                <p class="tip-text" id="dailyTip">جاري التحميل...</p>
+            </div>
+            <div class="dhikr-box">
+                <div class="dhikr-arabic" id="dhikrArabic">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</div>
+                <div class="dhikr-translation" id="dhikrTranslation">Свят Аллах и хвала Ему</div>
+            </div>
+        </div>
+
+        <button class="share-btn" id="shareBtn">
+            <span>📤</span>
+            <span>Поделиться расписанием</span>
+        </button>
 
         <button class="month-view-btn" id="toggleMonth">📅 Показать весь месяц</button>
 
@@ -489,6 +788,47 @@
             isha: 'Иша (Ночь)'
         };
 
+        const dailyTips = [
+            'اليوم الأول: استقبل رمضان بنية صادقة وقلب مخلص. رمضان كريم!',
+            'اليوم الثاني: احرص على قراءة القرآن يوميًا، ولو جزءًا واحدًا.',
+            'اليوم الثالث: الدعاء عند الإفطار مستجاب، فلا تنسَ الدعاء لنفسك ولمن تحب.',
+            'اليوم الرابع: صلاة التراويح سنة مؤكدة، احرص على أدائها في المسجد.',
+            'اليوم الخامس: تصدق ولو بالقليل، فالصدقة تطفئ الخطيئة.',
+            'اليوم السادس: احذر من الغيبة والنميمة، فهما يفسدان الصيام.',
+            'اليوم السابع: أول أسبوع من رمضان يمضي، استمر في الطاعات!',
+            'اليوم الثامن: اجعل لسانك رطبًا بذكر الله في كل وقت.',
+            'اليوم التاسع: صلة الرحم في رمضان لها أجر مضاعف.',
+            'اليوم العاشر: ثلث الشهر مضى، جدد نيتك واستمر في العبادة.',
+            'اليوم الحادي عشر: بداية العشر الأوسط، أيام المغفرة والرحمة.',
+            'اليوم الثاني عشر: أكثر من الاستغفار، فالله يحب التوابين.',
+            'اليوم الثالث عشر: احرص على السحور، فهو بركة وعون على الصيام.',
+            'اليوم الرابع عشر: اقرأ تفسير ما تقرأه من القرآن لتفهم معانيه.',
+            'اليوم الخامس عشر: منتصف رمضان، راجع نفسك وحاسبها.',
+            'اليوم السادس عشر: العشر الأوسط أيام المغفرة، أكثر من الاستغفار.',
+            'اليوم السابع عشر: ساعد الفقراء والمحتاجين، وأطعم الصائمين.',
+            'اليوم الثامن عشر: لا تضيع وقتك في اللغو والباطل.',
+            'اليوم التاسع عشر: اغتنم الساعات الأخيرة من النهار بالذكر والدعاء.',
+            'اليوم العشرون: اقترب موعد العشر الأواخر، استعد لها بالعزيمة.',
+            'اليوم الحادي والعشرون: بداية العشر الأواخر، أيام العتق من النار.',
+            'اليوم الثاني والعشرون: ليلة القدر في هذه الليالي، أحيها بالعبادة.',
+            'اليوم الثالث والعشرون: اعتكف إن استطعت، فهو سنة عظيمة.',
+            'اليوم الرابع والعشرون: اطلب العفو والمغفرة من الله في كل سجدة.',
+            'اليوم الخامس والعشرون: أحيي هذه الليلة، فقد تكون ليلة القدر.',
+            'اليوم السادس والعشرون: ضاعف من جهدك في العبادة، الختام قريب.',
+            'اليوم السابع والعشرون: الليلة الأرجح لليلة القدر، اجتهد فيها!',
+            'اليوم الثامن والعشرون: اختم القرآن إن لم تكن ختمته بعد.',
+            'اليوم التاسع والعشرون: آخر أيام رمضان، أخرج زكاة الفطر قبل العيد.'
+        ];
+
+        const adhkar = [
+            { arabic: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ', translation: 'Свят Аллах и хвала Ему' },
+            { arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ', translation: 'Нет божества, кроме Аллаха' },
+            { arabic: 'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ', translation: 'О Аллах, благослови Мухаммада' },
+            { arabic: 'أَسْتَغْفِرُ اللَّهَ', translation: 'Прошу прощения у Аллаха' },
+            { arabic: 'الْحَمْدُ لِلَّهِ', translation: 'Хвала Аллаху' },
+            { arabic: 'اللَّهُ أَكْبَرُ', translation: 'Аллах Велик' }
+        ];
+
         const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
         let currentDayIndex = 0;
@@ -525,17 +865,26 @@
             todayTimesEl.innerHTML = '';
             
             const prayers = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
-            const highlight = ['fajr', 'maghrib'];
             
             prayers.forEach(prayer => {
                 const prayerEl = document.createElement('div');
-                prayerEl.className = `prayer-time ${highlight.includes(prayer) ? 'highlight' : ''}`;
+                let highlightClass = '';
+                if (prayer === 'fajr') highlightClass = 'fajr-highlight';
+                if (prayer === 'maghrib') highlightClass = 'maghrib-highlight';
+                
+                prayerEl.className = `prayer-time ${highlightClass}`;
                 prayerEl.innerHTML = `
                     <div class="prayer-name">${prayerNames[prayer]}</div>
                     <div class="prayer-value">${dayData[prayer]}</div>
                 `;
                 todayTimesEl.appendChild(prayerEl);
             });
+            
+            updateImsakTime(dayData.fajr);
+            updateFastingDuration(dayData.fajr, dayData.maghrib);
+            updateHijriDate(dayData.day);
+            updateDailyTip(dayData.day);
+            updateProgress(dayData.day);
             
             document.getElementById('prevDay').disabled = index === 0;
             document.getElementById('nextDay').disabled = index === ramadanData.length - 1;
@@ -677,6 +1026,89 @@
             navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
 
+        function updateImsakTime(fajrTime) {
+            const [hours, minutes] = fajrTime.split(':');
+            let imsakMinutes = parseInt(minutes) - 10;
+            let imsakHours = parseInt(hours);
+            
+            if (imsakMinutes < 0) {
+                imsakMinutes += 60;
+                imsakHours -= 1;
+            }
+            
+            document.getElementById('imsakTime').textContent = 
+                `${String(imsakHours).padStart(2, '0')}:${String(imsakMinutes).padStart(2, '0')}`;
+        }
+
+        function updateFastingDuration(fajrTime, maghribTime) {
+            const [fajrH, fajrM] = fajrTime.split(':').map(Number);
+            const [maghribH, maghribM] = maghribTime.split(':').map(Number);
+            
+            const fajrMinutes = fajrH * 60 + fajrM;
+            const maghribMinutes = maghribH * 60 + maghribM;
+            const durationMinutes = maghribMinutes - fajrMinutes;
+            
+            const hours = Math.floor(durationMinutes / 60);
+            const minutes = durationMinutes % 60;
+            
+            document.getElementById('fastingDuration').textContent = 
+                `${hours} ч ${minutes} мин`;
+        }
+
+        function updateHijriDate(day) {
+            document.getElementById('hijriDate').textContent = `${day} رمضان 1447`;
+        }
+
+        function updateDailyTip(day) {
+            const tipIndex = day - 1;
+            document.getElementById('dailyTip').textContent = dailyTips[tipIndex] || dailyTips[0];
+            
+            const dhikrIndex = (day - 1) % adhkar.length;
+            document.getElementById('dhikrArabic').textContent = adhkar[dhikrIndex].arabic;
+            document.getElementById('dhikrTranslation').textContent = adhkar[dhikrIndex].translation;
+        }
+
+        function updateProgress(day) {
+            const percentage = Math.round((day / 29) * 100);
+            const circumference = 2 * Math.PI * 60;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            document.getElementById('progressCircle').style.strokeDashoffset = offset;
+            document.getElementById('progressPercentage').textContent = `${percentage}%`;
+            document.getElementById('progressInfo').textContent = `اليوم ${day} من 29`;
+            
+            const remaining = 29 - day;
+            document.getElementById('daysRemaining').textContent = 
+                remaining === 0 ? 'آخر يوم من رمضان' : `متبقي ${remaining} يومًا`;
+        }
+
+        document.getElementById('shareBtn').addEventListener('click', async () => {
+            const dayData = ramadanData[currentDayIndex];
+            const shareText = `🌙 Расписание намазов на ${dayData.day} день Рамадана (${formatDate(dayData.date)})\n\n` +
+                `Фаджр: ${dayData.fajr}\n` +
+                `Магриб: ${dayData.maghrib}\n\n` +
+                `Саратов | Рамадан 2026`;
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Рамадан 2026 - Саратов',
+                        text: shareText
+                    });
+                } catch (err) {
+                    console.log('Share cancelled');
+                }
+            } else {
+                navigator.clipboard.writeText(shareText);
+                const btn = document.getElementById('shareBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✓</span><span>Скопировано!</span>';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }
+        });
+
         const initialDay = getCurrentRamadanDay();
         displayDay(initialDay);
         renderCalendar();
@@ -704,4 +1136,3 @@
     </script>
 </body>
 </html>
-
