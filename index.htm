@@ -803,29 +803,6 @@
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="progress-ring">
-                <svg width="140" height="140">
-                    <circle cx="70" cy="70" r="60" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8" fill="none"></circle>
-                    <circle id="progressCircle" class="progress-ring-circle" cx="70" cy="70" r="60" 
-                        stroke="url(#progressGradient)" stroke-width="8" fill="none" 
-                        stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"></circle>
-                    <defs>
-                        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#fb923c;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="progress-text">
-                    <div class="progress-percentage" id="progressPercentage">0%</div>
-                    <div class="progress-label">مكتمل</div>
-                </div>
-            </div>
-            <div class="progress-info" id="progressInfo">اليوم 1 من 29</div>
-            <div class="progress-days" id="daysRemaining">متبقي 28 يومًا</div>
-        </div>
-
         <div class="countdown-section">
             <div class="countdown-content">
                 <div class="next-prayer-label">До следующего намаза</div>
@@ -1159,15 +1136,23 @@
 
         function getCurrentRamadanDay() {
             const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const day = now.getDate();
+            
+            for (let i = 0; i < ramadanData.length; i++) {
+                const [d, m] = ramadanData[i].date.split('.');
+                const dayNum = parseInt(d);
+                const monthNum = parseInt(m) - 1;
+                
+                if (monthNum === month && dayNum === day) {
+                    return i;
+                }
+            }
+            
             const startDate = new Date(2026, 1, 19);
-            const endDate = new Date(2026, 2, 19);
-            
             if (now < startDate) return 0;
-            if (now > endDate) return ramadanData.length - 1;
-            
-            const diffTime = now - startDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            return Math.min(diffDays, ramadanData.length - 1);
+            return ramadanData.length - 1;
         }
 
         function formatDate(dateStr) {
